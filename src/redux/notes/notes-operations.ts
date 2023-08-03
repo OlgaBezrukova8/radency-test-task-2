@@ -1,19 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 import { NoteProps } from "./notes-slice";
 
-// TODO: think about get note
-export const getNote = createAsyncThunk(
-  "notes/get",
-  async (note: NoteProps) => {
-    // Simulate an API call or async operation here
-    return note;
+export const getNotes = createAsyncThunk("notes/get", async () => {
+  try {
+    const response = await axios.get("notes-content.json");
+    return response.data;
+  } catch (error) {
+    console.error("Error get notes :", error);
+    return [];
   }
-);
+});
 
+// createAsyncThunk<Response, string> ???
 export const addNote = createAsyncThunk(
   "notes/add",
   async (note: NoteProps) => {
-    // Simulate an API call or async operation here
     return note;
   }
 );
@@ -21,7 +23,6 @@ export const addNote = createAsyncThunk(
 export const updateNote = createAsyncThunk(
   "notes/update",
   async (note: NoteProps) => {
-    // Simulate an API call or async operation here
     return note;
   }
 );
@@ -29,7 +30,6 @@ export const updateNote = createAsyncThunk(
 export const deleteNote = createAsyncThunk(
   "notes/delete",
   async (noteId: string) => {
-    // Simulate an API call or async operation here
     return noteId;
   }
 );

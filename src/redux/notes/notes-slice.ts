@@ -1,26 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addNote, updateNote, deleteNote } from "./notes-operations";
+import { addNote, updateNote, deleteNote, getNotes } from "./notes-operations";
 
 export interface NoteProps {
   id: string;
   name: string;
-  //   created: string;
-  //   category: string;
+  time: string;
+  category: string;
   content: string;
-  //   dates: string[];
-  //   archived: boolean;
 }
 
 interface NoteStateProps {
   notes: NoteProps[];
   isLoading: boolean;
-  error: {};
+  error: string | null;
 }
 
 const initialState: NoteStateProps = {
   notes: [],
   isLoading: false,
-  error: {},
+  error: null,
 };
 
 const notesSlice = createSlice({
@@ -29,6 +27,20 @@ const notesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(getNotes.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        getNotes.fulfilled,
+        (state, { payload }: PayloadAction<NoteProps[]>) => {
+          state.notes = payload;
+          state.isLoading = false;
+        }
+      )
+      .addCase(getNotes.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = (payload as string) || "Failed to get notes";
+      })
       .addCase(addNote.pending, (state) => {
         state.isLoading = true;
       })
@@ -39,15 +51,12 @@ const notesSlice = createSlice({
           state.isLoading = false;
         }
       )
-      // TODO: check when add api to addNote
-      //   .addCase(
-      //     addNote.rejected,
-      //     (state, { payload }: PayloadAction<NoteProps>) => {
-      //       state.isLoading = false;
-      //       state.error = payload;
-      //     }
-      //   )
+      .addCase(addNote.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = (payload as string) || "Failed to add notes";
+      })
       .addCase(
+        // TODO: add pending and rejected
         updateNote.fulfilled,
         (state, { payload }: PayloadAction<NoteProps>) => {
           state.notes = state.notes.map((notes) => {
@@ -55,6 +64,8 @@ const notesSlice = createSlice({
               notes = {
                 id: payload.id,
                 name: payload.name,
+                time: payload.time,
+                category: payload.category,
                 content: payload.content,
               };
             }
@@ -63,6 +74,7 @@ const notesSlice = createSlice({
         }
       )
       .addCase(
+        // TODO: add pending and rejected
         deleteNote.fulfilled,
         (state, { payload }: PayloadAction<string>) => {
           state.notes = state.notes.filter((note) => note.id !== payload);
