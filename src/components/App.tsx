@@ -5,6 +5,7 @@ import Layout from "./Layout/Layout";
 import Table from "./Table/Table";
 import Form from "./Form/Form";
 import Button from "./Button/Button";
+import ButtonsSet from "./ButtonsSet/ButtonsSet";
 import Modal from "./Modal/Modal";
 import {
   updateNote,
@@ -15,9 +16,9 @@ import {
 } from "../redux/notes/notes-operations";
 
 import { summaryTableHead, tableHead } from "../data/tableHead";
-import formatDate from "../utils/formatDate";
+import { formatDate, formatCurrentDate } from "../utils/formatDate";
 import formatParsedDate from "../utils/formatParsedDate";
-
+import { generateRandomId } from "../utils/randomIdGenerator";
 import {
   BodyTableProps,
   ArchiveNoteProps,
@@ -25,6 +26,8 @@ import {
   SummaryProps,
   SummaryTableProps,
 } from "../types";
+
+import createSummary from "../utils/createSummary";
 
 function App() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -65,19 +68,13 @@ function App() {
   const onAddNote = () => {
     setIsFormOpen(true);
     setFormModeAddNote(true);
-    const options: Intl.DateTimeFormatOptions = {
-      // TODO: Move to formatDate
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
     setCurrentEditNote({
-      id: new Date().getTime(),
+      id: generateRandomId(),
       name: "",
       category: "",
       content: "",
       archived: false,
-      time: new Date().toLocaleDateString("en-US", options),
+      time: formatCurrentDate(),
     });
   };
 
@@ -85,112 +82,31 @@ function App() {
     return notes.filter((note) => note.archived === isArchive);
   };
 
-  const createTableBody = (notesData: NoteProps[]) => {
-    const object = notesData.map(
-      ({ id, name, time, category, content, archived }) => {
-        const body: BodyTableProps = {
-          name: name,
-          created: formatDate(time),
-          category: category,
-          content: content,
-          dates: formatParsedDate(content),
-          actions: (
-            <div>
-              <Button
-                type="button"
-                onClick={() =>
-                  onEditNote({ id, time, name, category, content, archived })
-                }
-              >
-                Edit
-              </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  onDeleteNote(id);
-                }}
-              >
-                Delete
-              </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  onArchiveNote({ id, archived: !archived });
-                }}
-              >
-                Archive
-              </Button>
-            </div>
-          ),
-        };
-
-        return body;
-      }
-    );
-
+  const createNotesTableBody = (
+    notesData: NoteProps[],
+    isArchiveTable: boolean
+  ) => {
+    const object = notesData.map((note) => {
+      const { name, time, category, content } = note;
+      const body: BodyTableProps = {
+        name: name,
+        created: formatDate(time),
+        category: category,
+        content: content,
+        dates: formatParsedDate(content),
+        actions: (
+          <ButtonsSet
+            noteData={note}
+            isArchive={isArchiveTable}
+            onEditNote={onEditNote}
+            onArchiveNote={onArchiveNote}
+            onDeleteNote={onDeleteNote}
+          />
+        ),
+      };
+      return body;
+    });
     return object;
-  };
-
-  const createArchiveTableBody = (notesData: NoteProps[]) => {
-    const object = notesData.map(
-      ({ id, name, time, category, content, archived }) => {
-        const body: BodyTableProps = {
-          name: name,
-          created: formatDate(time),
-          category: category,
-          content: content,
-          dates: formatParsedDate(content),
-          actions: (
-            <div>
-              <Button
-                type="button"
-                onClick={() => {
-                  onDeleteNote(id);
-                }}
-              >
-                Delete
-              </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  onArchiveNote({ id, archived: !archived });
-                }}
-              >
-                Unarchive
-              </Button>
-            </div>
-          ),
-        };
-
-        return body;
-      }
-    );
-
-    return object;
-  };
-
-  // We need to have separated props to store category - counters for optimization purposes to access the corresponding counters by key -> acc[category],
-  const createSummary = (): SummaryProps => {
-    const summary: SummaryProps = notes.reduce((acc: SummaryProps, note) => {
-      const { category } = note;
-      const isArchived = note.archived === true;
-
-      if (!acc[category]) {
-        acc[category] = {
-          activeCount: 0,
-          archivedCount: 0,
-        };
-      }
-
-      if (isArchived) {
-        acc[category].archivedCount++;
-      } else {
-        acc[category].activeCount++;
-      }
-
-      return acc;
-    }, {});
-    return summary;
   };
 
   const createSummaryTable = (summary: SummaryProps): SummaryTableProps[] => {
@@ -209,7 +125,10 @@ function App() {
   return (
     <Layout>
       {activeNotes.length > 0 && (
-        <Table headers={tableHead} body={createTableBody(activeNotes)} />
+        <Table
+          headers={tableHead}
+          body={createNotesTableBody(activeNotes, false)}
+        />
       )}
       <Button
         type="button"
@@ -230,12 +149,12 @@ function App() {
       {archivedNotes.length > 0 && (
         <Table
           headers={tableHead}
-          body={createArchiveTableBody(archivedNotes)}
+          body={createNotesTableBody(archivedNotes, true)}
         />
       )}
       <Table
         headers={summaryTableHead}
-        body={createSummaryTable(createSummary())}
+        body={createSummaryTable(createSummary(notes))}
       />
     </Layout>
   );

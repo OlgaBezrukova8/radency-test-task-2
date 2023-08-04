@@ -7,7 +7,7 @@ import {
   archiveNote,
 } from "./notes-operations";
 import notesContent from "../../data/notesContent.json";
-import { NoteProps, NoteStateProps } from "../../types";
+import { ArchiveNoteProps, NoteProps, NoteStateProps } from "../../types";
 
 const initialState: NoteStateProps = {
   notes: notesContent,
@@ -54,8 +54,7 @@ const notesSlice = createSlice({
       })
       .addCase(
         updateNote.fulfilled,
-        // TODO: think about type of PayloadAction<any>
-        (state, { payload }: PayloadAction<any>) => {
+        (state, { payload }: PayloadAction<NoteProps>) => {
           state.notes = state.notes.map((note) => {
             if (note.id === payload.id) {
               note = {
@@ -94,8 +93,7 @@ const notesSlice = createSlice({
       })
       .addCase(
         archiveNote.fulfilled,
-        // TODO: think about type of PayloadAction<any>
-        (state, { payload }: PayloadAction<any>) => {
+        (state, { payload }: PayloadAction<ArchiveNoteProps>) => {
           state.notes = state.notes.map((note) => {
             if (note.id === payload.id) {
               note = {

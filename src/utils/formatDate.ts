@@ -1,10 +1,13 @@
-function formatDate(date: string) {
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
+const options: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+
+export function formatDate(date: string): string {
   return new Date(date).toLocaleDateString("en-US", options);
 }
 
-export default formatDate;
+export function formatCurrentDate(): string {
+  return new Date().toLocaleDateString("en-US", options);
+}

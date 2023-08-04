@@ -47,7 +47,7 @@ export interface BodyTableProps {
   category: string;
   content: string;
   dates: string;
-  actions: ReactNode;
+  actions: any;
 }
 
 export interface SummaryTableProps {
@@ -82,4 +82,12 @@ export interface ButtonProps {
   type: "button" | "submit" | "reset" | undefined;
   key?: string | null;
   disabled?: boolean;
+}
+
+export interface ButtonsSetProps {
+  noteData: NoteProps;
+  isArchive: boolean;
+  onEditNote: (noteData: NoteProps) => void;
+  onArchiveNote: (archiveState: ArchiveNoteProps) => void;
+  onDeleteNote: (id: number) => void;
 }
