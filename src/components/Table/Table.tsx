@@ -1,10 +1,11 @@
 import React from "react";
 import TableRow from "../TableRow/TableRow";
 import { TableProps } from "../../types";
+import "./Table.css";
 
 const Table: React.FC<TableProps> = ({ headers, body }) => {
   return (
-    <table>
+    <table className="container">
       <thead>
         <tr>
           {headers.map((header, index) => (
