@@ -1,4 +1,4 @@
-const tableHead: string[] = [
+export const tableHead: string[] = [
   "Name",
   "Created",
   "Category",
@@ -7,4 +7,8 @@ const tableHead: string[] = [
   "Actions",
 ];
 
-export default tableHead;
+export const summaryTableHead: string[] = [
+  "Note Category",
+  "Active",
+  "Archived",
+];
