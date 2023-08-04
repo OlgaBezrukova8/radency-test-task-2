@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { FormProps } from "../../types";
 import Dropdown from "../Dropdown/Dropdown";
+import FormInput from "../FormInput/FormInput";
+import Button from "../Button/Button";
+import { FormProps } from "../../types";
 
-const Form: React.FC<FormProps> = ({ noteData, onSubmit }) => {
+const Form: React.FC<FormProps> = ({
+  noteData,
+  onSubmit,
+  onClose,
+  formModeAdd,
+}) => {
   const [noteContent, setNoteContent] = useState(noteData);
 
   useEffect(() => {
@@ -10,20 +17,19 @@ const Form: React.FC<FormProps> = ({ noteData, onSubmit }) => {
   }, [noteData]);
 
   const onChange = (
-    e:
+    event:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
-    console.log(value);
-    setNoteContent((prevData) => ({
-      ...prevData,
+    const { name, value } = event.target;
+    setNoteContent((prevState) => ({
+      ...prevState,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
 
     if (
       noteContent.name.trim() === "" ||
@@ -36,11 +42,13 @@ const Form: React.FC<FormProps> = ({ noteData, onSubmit }) => {
     }
   };
 
+  const buttonTitle = formModeAdd ? "Create" : "Update";
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label>Name:</label>
-        <input
+        <FormInput
+          label="Name:"
           type="text"
           name="name"
           value={noteContent.name}
@@ -52,8 +60,8 @@ const Form: React.FC<FormProps> = ({ noteData, onSubmit }) => {
         <Dropdown category={noteContent.category} onChange={onChange} />
       </div>
       <div>
-        <label>Content:</label>
-        <input
+        <FormInput
+          label="Content:"
           type="text"
           name="content"
           value={noteContent.content}
@@ -61,7 +69,10 @@ const Form: React.FC<FormProps> = ({ noteData, onSubmit }) => {
         />
       </div>
 
-      <button type="submit">Update</button>
+      <Button type="submit">{buttonTitle}</Button>
+      <Button type="button" onClick={onClose}>
+        Cancel
+      </Button>
     </form>
   );
 };

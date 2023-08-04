@@ -11,7 +11,6 @@ export interface NoteProps {
   category: string;
   content: string;
   archived: boolean;
-  created?: string | undefined; // TODO: Remove
   dates?: string | undefined;
 }
 
@@ -58,13 +57,23 @@ export interface SummaryTableProps {
 
 export interface FormProps {
   noteData: NoteProps;
+  formModeAdd: boolean;
   onSubmit: (note: NoteProps) => void;
+  onClose: () => void;
+}
+
+export interface FormInputProps {
+  label: string;
+  type: "text" | undefined;
+  name: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface DropdownProps {
   category: string;
   onChange: (
-    e:
+    event:
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLInputElement>
   ) => void;
@@ -76,7 +85,7 @@ export interface ArchiveNoteProps {
 }
 
 export interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   children: React.ReactNode;
   className?: string;
   type: "button" | "submit" | "reset" | undefined;

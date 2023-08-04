@@ -55,7 +55,7 @@ export const archiveNote = createAsyncThunk<
   ArchiveNoteProps,
   ArchiveNoteProps,
   { state: RootState }
->("notes/archived", async (isArchived, { rejectWithValue }) => {
+>("notes/archive", async (isArchived, { rejectWithValue }) => {
   try {
     return isArchived;
   } catch (error) {

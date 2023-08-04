@@ -1,6 +1,6 @@
 import { NoteProps, SummaryProps } from "../types";
 
-// We need to have separated props to store category - counters for optimization purposes to access the corresponding counters by key -> acc[category],
+// We need to have separated props to store category - counters for optimization purposes to access the corresponding counters by key -> acc[category]
 const createSummary = (notes: NoteProps[]): SummaryProps => {
   const summary: SummaryProps = notes.reduce((acc: SummaryProps, note) => {
     const { category } = note;

@@ -4,10 +4,10 @@ const options: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
-export function formatDate(date: string): string {
+export const formatDate = (date: string): string => {
   return new Date(date).toLocaleDateString("en-US", options);
-}
+};
 
-export function formatCurrentDate(): string {
+export const formatCurrentDate = (): string => {
   return new Date().toLocaleDateString("en-US", options);
-}
+};

@@ -10,7 +10,7 @@ const ButtonsSet: React.FC<ButtonsSetProps> = ({
   onDeleteNote,
 }) => {
   return (
-    <div>
+    <div className="buttons-container">
       {!isArchive && (
         <Button type="button" onClick={() => onEditNote(noteData)}>
           Edit

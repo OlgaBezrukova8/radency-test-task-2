@@ -1,9 +1,10 @@
 import { LayoutProps } from "../../types";
+import "./Layout.css";
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
-      <main>{children}</main>
+      <main className="main">{children}</main>
     </>
   );
 };
