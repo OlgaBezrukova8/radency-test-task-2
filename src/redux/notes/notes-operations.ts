@@ -1,35 +1,64 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { NoteProps } from "./notes-slice";
+import { RootState } from "../store";
+import { ArchiveNoteProps, NoteProps } from "../../types";
 
-export const getNotes = createAsyncThunk("notes/get", async () => {
+export const getNotes = createAsyncThunk(
+  "notes/get",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get("notes-content.json");
+      return data;
+    } catch (error) {
+      return rejectWithValue(`Failed to get notes: ${error}`);
+    }
+  }
+);
+
+export const addNote = createAsyncThunk<
+  NoteProps,
+  NoteProps,
+  { state: RootState }
+>("notes/add", async (note, { rejectWithValue }) => {
   try {
-    const response = await axios.get("notes-content.json");
-    return response.data;
+    return note;
   } catch (error) {
-    console.error("Error get notes :", error);
-    return [];
+    return rejectWithValue(`Failed to add note: ${error}`);
   }
 });
 
-// createAsyncThunk<Response, string> ???
-export const addNote = createAsyncThunk(
-  "notes/add",
-  async (note: NoteProps) => {
-    return note;
+export const updateNote = createAsyncThunk<
+  NoteProps,
+  NoteProps,
+  { state: RootState }
+>("notes/update", async (updatedNote, { rejectWithValue }) => {
+  try {
+    return updatedNote;
+  } catch (error) {
+    return rejectWithValue(`Failed to update note: ${error}`);
   }
-);
+});
 
-export const updateNote = createAsyncThunk(
-  "notes/update",
-  async (note: NoteProps) => {
-    return note;
-  }
-);
-
-export const deleteNote = createAsyncThunk(
-  "notes/delete",
-  async (noteId: string) => {
+export const deleteNote = createAsyncThunk<
+  number,
+  number,
+  { state: RootState }
+>("notes/delete", async (noteId: number, { rejectWithValue }) => {
+  try {
     return noteId;
+  } catch (error) {
+    return rejectWithValue(`Failed to delete note: ${error}`);
   }
-);
+});
+
+export const archiveNote = createAsyncThunk<
+  ArchiveNoteProps,
+  ArchiveNoteProps,
+  { state: RootState }
+>("notes/archived", async (isArchived, { rejectWithValue }) => {
+  try {
+    return isArchived;
+  } catch (error) {
+    return rejectWithValue(`Failed to archive note: ${error}`);
+  }
+});

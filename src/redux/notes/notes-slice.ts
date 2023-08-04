@@ -1,22 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addNote, updateNote, deleteNote, getNotes } from "./notes-operations";
-
-export interface NoteProps {
-  id: string;
-  name: string;
-  time: string;
-  category: string;
-  content: string;
-}
-
-interface NoteStateProps {
-  notes: NoteProps[];
-  isLoading: boolean;
-  error: string | null;
-}
+import {
+  addNote,
+  updateNote,
+  deleteNote,
+  getNotes,
+  archiveNote,
+} from "./notes-operations";
+import notesContent from "../../data/notesContent.json";
+import { NoteProps, NoteStateProps } from "../../types";
 
 const initialState: NoteStateProps = {
-  notes: [],
+  notes: notesContent,
   isLoading: false,
   error: null,
 };
@@ -55,32 +49,72 @@ const notesSlice = createSlice({
         state.isLoading = false;
         state.error = (payload as string) || "Failed to add notes";
       })
+      .addCase(updateNote.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(
-        // TODO: add pending and rejected
         updateNote.fulfilled,
-        (state, { payload }: PayloadAction<NoteProps>) => {
-          state.notes = state.notes.map((notes) => {
-            if (notes.id === payload.id) {
-              notes = {
+        // TODO: think about type of PayloadAction<any>
+        (state, { payload }: PayloadAction<any>) => {
+          state.notes = state.notes.map((note) => {
+            if (note.id === payload.id) {
+              note = {
                 id: payload.id,
                 name: payload.name,
-                time: payload.time,
+                time: note.time,
                 category: payload.category,
                 content: payload.content,
+                archived: note.archived,
               };
             }
-            return notes;
+            return note;
           });
         }
       )
+      .addCase(updateNote.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = (payload as string) || "Failed to update notes";
+      })
+      .addCase(deleteNote.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(
-        // TODO: add pending and rejected
         deleteNote.fulfilled,
-        (state, { payload }: PayloadAction<string>) => {
+        (state, { payload }: PayloadAction<number>) => {
           state.notes = state.notes.filter((note) => note.id !== payload);
           state.isLoading = false;
         }
-      );
+      )
+      .addCase(deleteNote.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = (payload as string) || "Failed to delete notes";
+      })
+      .addCase(archiveNote.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        archiveNote.fulfilled,
+        // TODO: think about type of PayloadAction<any>
+        (state, { payload }: PayloadAction<any>) => {
+          state.notes = state.notes.map((note) => {
+            if (note.id === payload.id) {
+              note = {
+                id: note.id,
+                name: note.name,
+                time: note.time,
+                category: note.category,
+                content: note.content,
+                archived: payload.archived,
+              };
+            }
+            return note;
+          });
+        }
+      )
+      .addCase(archiveNote.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = (payload as string) || "Failed to archive notes";
+      });
   },
 });
 
