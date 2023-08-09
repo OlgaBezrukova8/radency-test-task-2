@@ -1,4 +1,5 @@
 import React from "react";
+import { MdEdit, MdDelete, MdArchive, MdUnarchive } from "react-icons/md";
 import Button from "../Button/Button";
 import { ButtonsSetProps } from "../../types";
 
@@ -10,10 +11,10 @@ const ButtonsSet: React.FC<ButtonsSetProps> = ({
   onDeleteNote,
 }) => {
   return (
-    <div className="buttons-container">
+    <div className="">
       {!isArchive && (
         <Button type="button" onClick={() => onEditNote(noteData)}>
-          Edit
+          <MdEdit />
         </Button>
       )}
       <Button
@@ -22,7 +23,7 @@ const ButtonsSet: React.FC<ButtonsSetProps> = ({
           onDeleteNote(noteData.id);
         }}
       >
-        Delete
+        <MdDelete />
       </Button>
       <Button
         type="button"
@@ -30,7 +31,7 @@ const ButtonsSet: React.FC<ButtonsSetProps> = ({
           onArchiveNote({ id: noteData.id, archived: !noteData.archived });
         }}
       >
-        {isArchive ? "Unarchive" : "Archive"}
+        {isArchive ? <MdUnarchive /> : <MdArchive />}
       </Button>
     </div>
   );

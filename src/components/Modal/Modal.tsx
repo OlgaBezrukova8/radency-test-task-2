@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import "./Modal.css";
 
 interface ModalProps {
   isOpen: boolean;
@@ -12,8 +11,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
   }
 
   return (
-    <div className="modal">
-      <div className="modal-content">{children}</div>
+    <div className="">
+      <div className="">{children}</div>
     </div>
   );
 };
