@@ -46,7 +46,7 @@ const Form: React.FC<FormProps> = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
+      <div className="mb-4">
         <FormInput
           label="Name:"
           type="text"
@@ -55,11 +55,11 @@ const Form: React.FC<FormProps> = ({
           onChange={onChange}
         />
       </div>
-      <div>
-        <label>Category:</label>
+      <div className="mb-4">
+        <label className="block mb-1">Category:</label>
         <Dropdown category={noteContent.category} onChange={onChange} />
       </div>
-      <div>
+      <div className="mb-4">
         <FormInput
           label="Content:"
           type="text"
@@ -69,10 +69,21 @@ const Form: React.FC<FormProps> = ({
         />
       </div>
 
-      <Button type="submit">{buttonTitle}</Button>
-      <Button type="button" onClick={onClose}>
-        Cancel
-      </Button>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          onClick={onClose}
+          className="mr-4 px-6 py-2 bg-red-200 hover:bg-red-300 rounded text-gray-500 hover:text-white font-medium"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          className="px-6 py-2 bg-emerald-200 hover:bg-emerald-300 rounded text-gray-500 hover:text-white font-medium"
+        >
+          {buttonTitle}
+        </Button>
+      </div>
     </form>
   );
 };

@@ -125,7 +125,7 @@ const HomePage = () => {
   const archivedNotes = getCurrentNotes(true);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 lg:px-10">
+    <div className="mx-auto max-w-7xl pt-8 px-4 sm:px-6 md:px-8 lg:px-10">
       {activeNotes.length > 0 && (
         <Table
           headers={tableHead}
@@ -137,7 +137,7 @@ const HomePage = () => {
         onClick={() => {
           onAddNote();
         }}
-        className=""
+        className="px-8 py-4 bg-emerald-200 hover:bg-emerald-300 rounded mb-4 text-gray-500 hover:text-white uppercase font-semibold"
       >
         Add note
       </Button>

@@ -11,10 +11,10 @@ const ButtonsSet: React.FC<ButtonsSetProps> = ({
   onDeleteNote,
 }) => {
   return (
-    <div className="">
+    <div className="flex justify-center items-center">
       {!isArchive && (
         <Button type="button" onClick={() => onEditNote(noteData)}>
-          <MdEdit />
+          <MdEdit size={28} />
         </Button>
       )}
       <Button
@@ -23,7 +23,7 @@ const ButtonsSet: React.FC<ButtonsSetProps> = ({
           onDeleteNote(noteData.id);
         }}
       >
-        <MdDelete />
+        <MdDelete size={28} />
       </Button>
       <Button
         type="button"
@@ -31,7 +31,7 @@ const ButtonsSet: React.FC<ButtonsSetProps> = ({
           onArchiveNote({ id: noteData.id, archived: !noteData.archived });
         }}
       >
-        {isArchive ? <MdUnarchive /> : <MdArchive />}
+        {isArchive ? <MdUnarchive size={28} /> : <MdArchive size={28} />}
       </Button>
     </div>
   );
