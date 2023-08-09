@@ -9,8 +9,14 @@ const FormInput: React.FC<FormInputProps> = ({
 }) => {
   return (
     <>
-      <label>{label}</label>
-      <input type={type} name={name} value={value} onChange={onChange} />
+      <label className="block mb-1">{label}</label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+      />
     </>
   );
 };
